@@ -2,8 +2,7 @@ version: "3"
 services:
   fastify:
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: .
     container_name: fastify
     working_dir: /home/app
     volumes:
@@ -11,3 +10,7 @@ services:
     ports:
       - "3000:3000"
     command: sh -c "npm install && npm run dev"
+  redis:
+    image: redis:alpine
+    ports:
+      - "10000:6379"

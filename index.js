@@ -1,12 +1,17 @@
-// Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+const fastify = require('fastify')({ logger: true });
+const redis = require('redis');
+const client = redis.createClient('redis://redis:6379');
+client.set('foo', new Date());
 
-// Declare a route
-fastify.get('/', async (request, reply) => {
-    return { hello: 'world' }
-})
+fastify.get('/', (request, reply) => {
+    client.get('foo', (err, redRply) => {
+        console.log({ redRply })
+        return reply.send({
+            msg: redRply
+        })
+    });
+});
 
-// Run the server!
 const start = async () => {
     try {
         await fastify.listen(3000, '0.0.0.0')
